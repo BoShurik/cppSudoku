@@ -32,3 +32,8 @@ bool Field::isChangeable()
 {
 	return this->changeable;
 }
+
+bool Field::isEmpty()
+{
+	return (this->number == 0) ? true : false;
+}

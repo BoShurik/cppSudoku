@@ -14,5 +14,6 @@ public:
 	int getNumber();
 
 	bool isChangeable();
+	bool isEmpty();
 };
 

@@ -18,7 +18,7 @@ Sudoku::Sudoku(int matrix[MAX_HEIGHT][MAX_WIDTH])
     {
         for (int j = 0; j < MAX_WIDTH; j++)
         {
-            Field field = Field(matrix[j][i], false);
+			Field field = Field(matrix[j][i], (matrix[j][i] == 0) ? true : false);
 			this->matrix[j][i] = field;
         }
     }
@@ -125,7 +125,7 @@ bool Sudoku::solveRecursive(int x, int y)
 
     if (this->matrix[x][y].isChangeable())
     {
-        std::vector<int> availableNumbers = this->getAvailableNumbers(x, y);
+		std::vector<int> availableNumbers = this->getAvailableNumbers(x, y);
 
 		for(int i = 0; i < availableNumbers.size(); i++) 
 		{
@@ -141,7 +141,7 @@ bool Sudoku::solveRecursive(int x, int y)
                 }
                 else
                 {
-                    this->matrix[x][y].setNumber(0);
+					this->matrix[x][y].setNumber(0);
                 }
             }
             else
@@ -163,7 +163,7 @@ bool Sudoku::solveRecursive(int x, int y)
     }
     else
     {
-        return this->isSolved();
+		return this->isSolved();
     }
 }
 
@@ -190,7 +190,7 @@ std::vector<int> Sudoku::getAvailableNumbers(int x, int y)
     {
         if (i != x)
         {
-            std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[i][x].getNumber());
+            std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[x][i].getNumber());
 			if (key != availableNumbers.end())
             {
 				availableNumbers.erase(key);
@@ -207,7 +207,7 @@ std::vector<int> Sudoku::getAvailableNumbers(int x, int y)
     {
         if (i != y)
         {
-            std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[x][i].getNumber());
+            std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[i][y].getNumber());
 			if (key != availableNumbers.end())
             {
 				availableNumbers.erase(key);

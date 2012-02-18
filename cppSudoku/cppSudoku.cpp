@@ -22,7 +22,13 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	int matrix[9][9];
 
-	DWORD beginTime = GetTickCount();
+	LARGE_INTEGER li;
+    QueryPerformanceFrequency(&li);
+
+    double PCFreq = double(li.QuadPart)/1000.0;
+
+    QueryPerformanceCounter(&li);
+    __int64 CounterStart = li.QuadPart;
 
 	matrix[0][0] = 2; matrix[1][0] = 0; matrix[2][0] = 0; 
 	matrix[3][0] = 0; matrix[4][0] = 0; matrix[5][0] = 0; 
@@ -75,7 +81,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	printSudoku(sudoku);
 
-	printf("%ul\n", GetTickCount() - beginTime);
+    QueryPerformanceCounter(&li);
+    printf("%f\n", double(li.QuadPart-CounterStart) / PCFreq);
 	
 	return 0;
 }

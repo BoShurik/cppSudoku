@@ -7,7 +7,7 @@ Sudoku::Sudoku(void)
     {
         for (int j = 0; j < MAX_WIDTH; j++)
         {
-            this->matrix[j][i] = Field();
+			this->matrix[j][i] = Field();
         }
     }
 }
@@ -18,7 +18,7 @@ Sudoku::Sudoku(int matrix[MAX_HEIGHT][MAX_WIDTH])
     {
         for (int j = 0; j < MAX_WIDTH; j++)
         {
-			Field field = Field(matrix[j][i], (matrix[j][i] == 0) ? true : false);
+			Field field = {matrix[j][i], (matrix[j][i] == 0) ? true : false};
 			this->matrix[j][i] = field;
         }
     }
@@ -45,7 +45,7 @@ bool Sudoku::isSolved()
     {
         for (int j = 0; j < MAX_WIDTH; j++)
         {
-			if (this->matrix[j][i].isEmpty())
+			if (this->matrix[j][i].number == 0)
             {
                 return false;
             }
@@ -57,12 +57,12 @@ bool Sudoku::isSolved()
 		std::vector<int> colNumbers;
         for (int j = 0; j < MAX_WIDTH; j++)
         {
-			if (std::find(colNumbers.begin(), colNumbers.end(), this->matrix[j][i].getNumber()) != colNumbers.end())
+			if (std::find(colNumbers.begin(), colNumbers.end(), this->matrix[j][i].number) != colNumbers.end())
 			{
 				return false;
 			}
 
-            colNumbers.push_back(this->matrix[j][i].getNumber());
+            colNumbers.push_back(this->matrix[j][i].number);
         }
     }
 
@@ -71,12 +71,12 @@ bool Sudoku::isSolved()
         std::vector<int> rowNumbers;
         for (int j = 0; j < MAX_WIDTH; j++)
         {
-            if (std::find(rowNumbers.begin(), rowNumbers.end(), this->matrix[i][j].getNumber()) != rowNumbers.end())
+            if (std::find(rowNumbers.begin(), rowNumbers.end(), this->matrix[i][j].number) != rowNumbers.end())
             {
                 return false;
             }
 
-			rowNumbers.push_back((this->matrix[i][j]).getNumber());
+			rowNumbers.push_back((this->matrix[i][j]).number);
         }
     }
 
@@ -90,12 +90,12 @@ bool Sudoku::isSolved()
             std::vector<int> squareNumbers;
             for (int j = 0; j < 3; j++)
             {
-                if (std::find(squareNumbers.begin(), squareNumbers.end(), this->matrix[j + 3 * kj][i + 3 * ki].getNumber()) != squareNumbers.end())
+                if (std::find(squareNumbers.begin(), squareNumbers.end(), this->matrix[j + 3 * kj][i + 3 * ki].number) != squareNumbers.end())
 				{
 					return false;
 				}
 
-				squareNumbers.push_back(this->matrix[j + 3 * kj][i + 3 * ki].getNumber());
+				squareNumbers.push_back(this->matrix[j + 3 * kj][i + 3 * ki].number);
             }
         }
     }
@@ -123,7 +123,7 @@ bool Sudoku::solveRecursive(int x, int y)
         nextY = y;
     }
 
-    if (this->matrix[x][y].isChangeable())
+    if (this->matrix[x][y].changeable == true)
     {
 		std::vector<int> availableNumbers = this->getAvailableNumbers(x, y);
 
@@ -131,7 +131,7 @@ bool Sudoku::solveRecursive(int x, int y)
 		{
 			int number = availableNumbers.at(i);
 
-			this->matrix[x][y].setNumber(number);
+			this->matrix[x][y].number = number;
             if (!final)
             {
                 bool result = this->solveRecursive(nextX, nextY);
@@ -141,7 +141,7 @@ bool Sudoku::solveRecursive(int x, int y)
                 }
                 else
                 {
-					this->matrix[x][y].setNumber(0);
+					this->matrix[x][y].number = 0;
                 }
             }
             else
@@ -176,7 +176,7 @@ std::vector<int> Sudoku::getAvailableNumbers(int x, int y)
 {
 	std::vector<int> availableNumbers;
 	
-	if (!(this->matrix[x][y]).isChangeable())
+	if (this->matrix[x][y].changeable == false)
     {
         return availableNumbers;
     }
@@ -190,7 +190,7 @@ std::vector<int> Sudoku::getAvailableNumbers(int x, int y)
     {
         if (i != x)
         {
-            std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[x][i].getNumber());
+            std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[x][i].number);
 			if (key != availableNumbers.end())
             {
 				availableNumbers.erase(key);
@@ -207,7 +207,7 @@ std::vector<int> Sudoku::getAvailableNumbers(int x, int y)
     {
         if (i != y)
         {
-            std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[i][y].getNumber());
+            std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[i][y].number);
 			if (key != availableNumbers.end())
             {
 				availableNumbers.erase(key);
@@ -229,7 +229,7 @@ std::vector<int> Sudoku::getAvailableNumbers(int x, int y)
         {
             if ((i + 3 * ki != y) && (j + 3 * kj != x))
             {
-                std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[j + 3 * kj][i + 3 * ki].getNumber());
+                std::vector<int>::iterator key = std::find(availableNumbers.begin(), availableNumbers.end(), this->matrix[j + 3 * kj][i + 3 * ki].number);
 				if (key != availableNumbers.end())
 				{
 					availableNumbers.erase(key);
